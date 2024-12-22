@@ -1,5 +1,7 @@
 // importação do CSS global
 import "@/app/ui/global.css"
+// importação da fonte Inter
+import { inter } from "@/app/ui/fonts"
 
 /**
  * Componente de nível superior da aplicação.
@@ -8,7 +10,14 @@ import "@/app/ui/global.css"
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body
+        // aplicação da fonte
+        className={`
+        ${inter.className} antialiased
+        `}
+      >
+        {children}
+      </body>
     </html>
   )
 }
