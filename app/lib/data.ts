@@ -14,15 +14,17 @@ import { formatCurrency } from "./utils"
 
 export async function fetchRevenue() {
   try {
-    // Artificially delay a response for demo purposes.
-    // Don't do this in production :)
+    // Simulação de Slow Data Fetch
+    console.log("Fetching revenue data...")
+    // Atraso de 3 segundos
+    await new Promise((resolve) => setTimeout(resolve, 3000))
 
-    // console.log('Fetching revenue data...');
-    // await new Promise((resolve) => setTimeout(resolve, 3000));
+    /* Obter dados do servidor */
 
     const data = await sql<Revenue>`SELECT * FROM revenue`
 
-    // console.log('Data fetch completed after 3 seconds.');
+    // Simulação de Slow Data Fetch
+    console.log("Data fetch completed after 3 seconds.")
 
     return data.rows
   } catch (error) {
