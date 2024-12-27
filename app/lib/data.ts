@@ -33,6 +33,7 @@ export async function fetchRevenue() {
 
 export async function fetchLatestInvoices() {
   try {
+    /** Consulta das últimas 5 faturas mais recentes. */
     const data = await sql<LatestInvoiceRaw>`
       SELECT invoices.amount, customers.name, customers.image_url, customers.email, invoices.id
       FROM invoices
