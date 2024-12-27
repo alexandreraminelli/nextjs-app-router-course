@@ -2,6 +2,7 @@ import { Card } from "@/app/ui/dashboard/cards"
 import RevenueChart from "@/app/ui/dashboard/revenue-chart"
 import LatestInvoices from "@/app/ui/dashboard/latest-invoices"
 import { lusitana } from "@/app/ui/fonts"
+import { fetchRevenue } from "@/app/lib/data"
 
 /**
  * Página de dashboard.
@@ -11,6 +12,10 @@ import { lusitana } from "@/app/ui/fonts"
  * @author Alexandre Raminelli
  */
 export default async function Page() {
+  /** Dados de receita. */
+  const revenue = await fetchRevenue()
+
+  // retorno do componente
   return (
     <main>
       {/* Título */}
@@ -28,7 +33,7 @@ export default async function Page() {
       </div>
 
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
-        {/* <RevenueChart revenue={revenue}  /> */}
+        <RevenueChart revenue={revenue} />
         {/* <LatestInvoices latestInvoices={latestInvoices} /> */}
       </div>
     </main>
