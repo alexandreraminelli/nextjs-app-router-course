@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
 
   // Recursos experimentais
   experimental: {
-    // Pré-renderização parcial
     ppr: "incremental",
   },
 }
