@@ -6,6 +6,7 @@ import {
   usePathname, // lê o caminho da URL atual
   useRouter, // permite a navegação entre rotas dentro de um componente cliente
 } from "next/navigation"
+import { useDebouncedCallback } from "use-debounce" // função que evita que a pesquisa faça solicitações abusivas desnecessárias pro banco de dados
 
 /** Componente da caixa de pesquisa.
  * @author Next.js
@@ -23,23 +24,26 @@ export default function Search({ placeholder }: { placeholder: string }) {
    *
    * @author Alexandre Raminelli
    */
-  function handleSearch(term: string) {
-    /** Parâmetros de pesquisa. Uma instância de `URLSearchParams`. */
-    const params = new URLSearchParams(searchParams)
+  const handleSearch = useDebouncedCallback(
+    (term: string) => {
+      /** Parâmetros de pesquisa. Uma instância de `URLSearchParams`. */
+      const params = new URLSearchParams(searchParams)
 
-    if (term) {
-      /* se entrada tiver texto */
-      // definir a entrada como parâmetro de pesquisa
-      params.set("query", term)
-    } else {
-      /* se entrada estiver vazia */
-      // apagar parâmetros
-      params.delete("query")
-    }
+      if (term) {
+        /* se entrada tiver texto */
+        // definir a entrada como parâmetro de pesquisa
+        params.set("query", term)
+      } else {
+        /* se entrada estiver vazia */
+        // apagar parâmetros
+        params.delete("query")
+      }
 
-    // Atualizar a URL com os parâmetros de pesquisa
-    replace(`${pathname}?${params.toString()}`)
-  }
+      // Atualizar a URL com os parâmetros de pesquisa
+      replace(`${pathname}?${params.toString()}`)
+    },
+    300 // executar código a cada 300ms quando o usuário parar de digitar
+  )
 
   // retorno do componente
   return (
