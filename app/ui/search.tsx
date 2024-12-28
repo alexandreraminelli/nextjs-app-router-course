@@ -29,6 +29,9 @@ export default function Search({ placeholder }: { placeholder: string }) {
       /** Parâmetros de pesquisa. Uma instância de `URLSearchParams`. */
       const params = new URLSearchParams(searchParams)
 
+      // Redefinir o número da página para 1 quando uma nova pesquisa for realizada
+      params.set("page", "1")
+
       if (term) {
         /* se entrada tiver texto */
         // definir a entrada como parâmetro de pesquisa

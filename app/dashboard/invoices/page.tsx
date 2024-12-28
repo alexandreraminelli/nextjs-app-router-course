@@ -1,10 +1,11 @@
-import { lusitana } from "@/app/ui/fonts"; // fonte Lusitana
-import { CreateInvoice } from "@/app/ui/invoices/buttons"; // botão de criar fatura
+import { lusitana } from "@/app/ui/fonts" // fonte Lusitana
+import { CreateInvoice } from "@/app/ui/invoices/buttons" // botão de criar fatura
 import Table from "@/app/ui/invoices/table"
 import Pagination from "@/app/ui/invoices/pagination"
-import Search from "@/app/ui/search"; // barra de pesquisa
-import { InvoicesTableSkeleton } from "@/app/ui/skeletons"; // skeleton do componente Table
-import { Suspense } from "react"; // rotas dinâmicas otimizadas
+import Search from "@/app/ui/search" // barra de pesquisa
+import { InvoicesTableSkeleton } from "@/app/ui/skeletons" // skeleton do componente Table
+import { Suspense } from "react" // rotas dinâmicas otimizadas
+import { fetchInvoicesPages } from "@/app/lib/data"
 
 /** Página de faturas. */
 export default async function Page(props: {
@@ -17,6 +18,9 @@ export default async function Page(props: {
   const searchParams = await props.searchParams
   const query = searchParams?.query || ""
   const currentPage = Number(searchParams?.page) || 1
+
+  /* variáveis para paginação */
+  const totalPages = await fetchInvoicesPages(query)
 
   // retorno do componente
   return (
@@ -39,7 +43,10 @@ export default async function Page(props: {
         <Table query={query} currentPage={currentPage} />
       </Suspense>
 
-      <div className="mt-5 flex w-full justify-center">{/* <Pagination totalPages={totalPages} /> */}</div>
+      {/* Paginação: dividir os resultados em mais de uma página */}
+      <div className="mt-5 flex w-full justify-center">
+        <Pagination totalPages={totalPages} />
+      </div>
     </div>
   )
 }
