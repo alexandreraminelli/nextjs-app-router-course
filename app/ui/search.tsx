@@ -1,14 +1,21 @@
 "use client" // componente cliente
 
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline" // ícone de pesquisa
-import { useSearchParams } from "next/navigation"
+import {
+  useSearchParams, // acessa os parâmetros da URL atual
+  usePathname, // lê o caminho da URL atual
+  useRouter, // permite a navegação entre rotas dentro de um componente cliente
+} from "next/navigation"
 
 /** Componente da caixa de pesquisa.
  * @author Next.js
  */
 export default function Search({ placeholder }: { placeholder: string }) {
-  /**  */
+  // Usos dos hooks
   const searchParams = useSearchParams()
+  /** A URL atual. */
+  const pathname = usePathname()
+  const { replace } = useRouter()
 
   /**
    * Função que captura a entrada da caixa de pesquisa e atribui eles ao parâmetros de pesquisa.
@@ -29,6 +36,9 @@ export default function Search({ placeholder }: { placeholder: string }) {
       // apagar parâmetros
       params.delete("query")
     }
+
+    // Atualizar a URL com os parâmetros de pesquisa
+    replace(`${pathname}?${params.toString()}`)
   }
 
   // retorno do componente
