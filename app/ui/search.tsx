@@ -57,6 +57,8 @@ export default function Search({ placeholder }: { placeholder: string }) {
         onChange={(e) => {
           handleSearch(e.target.value) // passar texto do input como parâmetro na função `handleSearch`
         }}
+        // Valor padrão: parâmetros de pesquisa da URL (se houver)
+        defaultValue={searchParams.get("query")?.toString()}
       />
 
       {/* Ícone de pesquisa */}
