@@ -7,7 +7,18 @@ import { InvoicesTableSkeleton } from "@/app/ui/skeletons" // skeleton do compon
 import { Suspense } from "react"
 
 /** Página de faturas. */
-export default function Page() {
+export default async function Page(props: {
+  searchParams?: Promise<{
+    query?: string
+    page?: string
+  }>
+}) {
+  /* variáveis para pesquisa */
+  const searchParams = await props.searchParams
+  const query = searchParams?.query || ""
+  const currentPage = Number(searchParams?.page) || 1
+
+  // retorno do componente
   return (
     <div className="w-full">
       {/* Cabeçalho */}
@@ -23,9 +34,10 @@ export default function Page() {
         <CreateInvoice />
       </div>
 
-      {/*  <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
+      {/* Tabela de faturas com resultado da pesquisa */}
+      <Suspense key={query + currentPage} fallback={<InvoicesTableSkeleton />}>
         <Table query={query} currentPage={currentPage} />
-      </Suspense> */}
+      </Suspense>
 
       <div className="mt-5 flex w-full justify-center">{/* <Pagination totalPages={totalPages} /> */}</div>
     </div>
