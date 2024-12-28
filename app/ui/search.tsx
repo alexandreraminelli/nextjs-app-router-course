@@ -1,19 +1,34 @@
 "use client" // componente cliente
 
 import { MagnifyingGlassIcon } from "@heroicons/react/24/outline" // ícone de pesquisa
+import { useSearchParams } from "next/navigation"
 
 /** Componente da caixa de pesquisa.
  * @author Next.js
  */
 export default function Search({ placeholder }: { placeholder: string }) {
+  /**  */
+  const searchParams = useSearchParams()
+
   /**
-   * Função que
+   * Função que captura a entrada da caixa de pesquisa e atribui eles ao parâmetros de pesquisa.
    * @param term Termo da pesquisa
    *
    * @author Alexandre Raminelli
    */
   function handleSearch(term: string) {
-    console.log(term)
+    /** Parâmetros de pesquisa. Uma instância de `URLSearchParams`. */
+    const params = new URLSearchParams(searchParams)
+
+    if (term) {
+      /* se entrada tiver texto */
+      // definir a entrada como parâmetro de pesquisa
+      params.set("query", term)
+    } else {
+      /* se entrada estiver vazia */
+      // apagar parâmetros
+      params.delete("query")
+    }
   }
 
   // retorno do componente
