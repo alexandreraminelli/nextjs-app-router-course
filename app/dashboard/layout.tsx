@@ -1,5 +1,8 @@
 import SideNav from "@/app/ui/dashboard/sidenav"
 
+// Configurar o PPR na rota
+export const experimental_ppr = true
+
 /** Interface dos props de `Layout`. */
 interface LayoutProps {
   /** Filho do componente */
