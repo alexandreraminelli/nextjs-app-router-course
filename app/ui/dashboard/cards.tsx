@@ -1,45 +1,44 @@
-import {
-  BanknotesIcon,
-  ClockIcon,
-  UserGroupIcon,
-  InboxIcon,
-} from '@heroicons/react/24/outline';
-import { lusitana } from '@/app/ui/fonts';
+import { BanknotesIcon, ClockIcon, UserGroupIcon, InboxIcon } from "@heroicons/react/24/outline"
+import { lusitana } from "@/app/ui/fonts"
+import { fetchCardData } from "@/app/lib/data"
 
 const iconMap = {
   collected: BanknotesIcon,
   customers: UserGroupIcon,
   pending: ClockIcon,
   invoices: InboxIcon,
-};
+}
 
+/** Componente da lista de cards do dashboard. */
 export default async function CardWrapper() {
+  // Dados dos cards do db | obtidos via desestruturação
+  const {
+    /** Total de faturas pagas. */
+    totalPaidInvoices,
+    /** Total de faturas pendentes. */
+    totalPendingInvoices,
+    /** Quantidade de faturas. */
+    numberOfInvoices,
+    /** Quantidade de consumidores */
+    numberOfCustomers,
+  } = await fetchCardData()
+
+  // retorno do componente
   return (
     <>
       {/* NOTE: Uncomment this code in Chapter 9 */}
 
-      {/* <Card title="Collected" value={totalPaidInvoices} type="collected" />
+      <Card title="Collected" value={totalPaidInvoices} type="collected" />
       <Card title="Pending" value={totalPendingInvoices} type="pending" />
       <Card title="Total Invoices" value={numberOfInvoices} type="invoices" />
-      <Card
-        title="Total Customers"
-        value={numberOfCustomers}
-        type="customers"
-      /> */}
+      <Card title="Total Customers" value={numberOfCustomers} type="customers" />
     </>
-  );
+  )
 }
 
-export function Card({
-  title,
-  value,
-  type,
-}: {
-  title: string;
-  value: number | string;
-  type: 'invoices' | 'customers' | 'pending' | 'collected';
-}) {
-  const Icon = iconMap[type];
+/** Componente do card do dashboard. */
+export function Card({ title, value, type }: { title: string; value: number | string; type: "invoices" | "customers" | "pending" | "collected" }) {
+  const Icon = iconMap[type]
 
   return (
     <div className="rounded-xl bg-gray-50 p-2 shadow-sm">
@@ -54,5 +53,5 @@ export function Card({
         {value}
       </p>
     </div>
-  );
+  )
 }
