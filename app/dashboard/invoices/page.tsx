@@ -1,10 +1,10 @@
-import Pagination from "@/app/ui/invoices/pagination"
-import Search from "@/app/ui/search" // barra de pesquisa
+import { lusitana } from "@/app/ui/fonts"; // fonte Lusitana
+import { CreateInvoice } from "@/app/ui/invoices/buttons"; // botão de criar fatura
 import Table from "@/app/ui/invoices/table"
-import { CreateInvoice } from "@/app/ui/invoices/buttons" // botão de criar fatura
-import { lusitana } from "@/app/ui/fonts" // fonte Lusitana
-import { InvoicesTableSkeleton } from "@/app/ui/skeletons" // skeleton do componente Table
-import { Suspense } from "react"
+import Pagination from "@/app/ui/invoices/pagination"
+import Search from "@/app/ui/search"; // barra de pesquisa
+import { InvoicesTableSkeleton } from "@/app/ui/skeletons"; // skeleton do componente Table
+import { Suspense } from "react"; // rotas dinâmicas otimizadas
 
 /** Página de faturas. */
 export default async function Page(props: {
