@@ -1,9 +1,15 @@
+import { fetchLatestInvoices } from "@/app/lib/data" // obter dados do db
+import { LatestInvoice } from "@/app/lib/definitions"
+import { lusitana } from "@/app/ui/fonts"
 import { ArrowPathIcon } from "@heroicons/react/24/outline"
 import clsx from "clsx"
 import Image from "next/image"
-import { lusitana } from "@/app/ui/fonts"
-import { LatestInvoice } from "@/app/lib/definitions"
-export default async function LatestInvoices({ latestInvoices }: { latestInvoices: LatestInvoice[] }) {
+export default async function LatestInvoices() {
+  // obter dados do db
+  /** Dados das faturas mais recentes. */
+  const latestInvoices = await fetchLatestInvoices()
+
+  // retorno do componente
   return (
     <div className="flex w-full flex-col md:col-span-4">
       <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>Latest Invoices</h2>

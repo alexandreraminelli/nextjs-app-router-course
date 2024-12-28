@@ -1,12 +1,9 @@
-import {
-  fetchCardData,
-  fetchLatestInvoices, // função que obtém as faturas mais recentes no db
-} from "@/app/lib/data"
+import { fetchCardData } from "@/app/lib/data"
 import { Card } from "@/app/ui/dashboard/cards"
 import LatestInvoices from "@/app/ui/dashboard/latest-invoices"
 import RevenueChart from "@/app/ui/dashboard/revenue-chart"
 import { lusitana } from "@/app/ui/fonts"
-import { RevenueChartSkeleton } from "@/app/ui/skeletons"; // skeleton do gráfico de receitas
+import { LatestInvoicesSkeleton, RevenueChartSkeleton } from "@/app/ui/skeletons"; // skeleton do gráfico de receitas
 import { Suspense } from "react"; // streaming de componente
 
 /**
@@ -17,8 +14,6 @@ import { Suspense } from "react"; // streaming de componente
  * @author Alexandre Raminelli
  */
 export default async function Page() {
-  /** Dados das faturas mais recentes. */
-  const latestInvoices = await fetchLatestInvoices()
   // Dados dos cards | obtidos via desestruturação
   const {
     /** Total de faturas pagas. */
@@ -53,7 +48,10 @@ export default async function Page() {
           <RevenueChart />
         </Suspense>
         {/* Lista das faturas mais recentes */}
-        <LatestInvoices latestInvoices={latestInvoices} />
+        <Suspense fallback={<LatestInvoicesSkeleton />}>
+          {/* Componente com renderização pronta */}
+          <LatestInvoices />
+        </Suspense>
       </div>
     </main>
   )
