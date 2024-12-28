@@ -1,12 +1,13 @@
-import { Card } from "@/app/ui/dashboard/cards"
-import RevenueChart from "@/app/ui/dashboard/revenue-chart"
-import LatestInvoices from "@/app/ui/dashboard/latest-invoices"
-import { lusitana } from "@/app/ui/fonts"
 import {
-  fetchRevenue, // função que obtém as receitas no db
-  fetchLatestInvoices, // função que obtém as faturas mais recentes no db
   fetchCardData,
+  fetchLatestInvoices, // função que obtém as faturas mais recentes no db
 } from "@/app/lib/data"
+import { Card } from "@/app/ui/dashboard/cards"
+import LatestInvoices from "@/app/ui/dashboard/latest-invoices"
+import RevenueChart from "@/app/ui/dashboard/revenue-chart"
+import { lusitana } from "@/app/ui/fonts"
+import { RevenueChartSkeleton } from "@/app/ui/skeletons"; // skeleton do gráfico de receitas
+import { Suspense } from "react"; // streaming de componente
 
 /**
  * Página de dashboard.
@@ -16,8 +17,6 @@ import {
  * @author Alexandre Raminelli
  */
 export default async function Page() {
-  /** Dados de receita. */
-  const revenue = await fetchRevenue()
   /** Dados das faturas mais recentes. */
   const latestInvoices = await fetchLatestInvoices()
   // Dados dos cards | obtidos via desestruturação
@@ -47,7 +46,12 @@ export default async function Page() {
 
       <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-4 lg:grid-cols-8">
         {/* Gráfico de receitas */}
-        <RevenueChart revenue={revenue} />
+        <Suspense
+          fallback={<RevenueChartSkeleton />} // skeleton enquanto componente filho ainda não foi carregado
+        >
+          {/* Gráfico quando os dados forem carregados */}
+          <RevenueChart />
+        </Suspense>
         {/* Lista das faturas mais recentes */}
         <LatestInvoices latestInvoices={latestInvoices} />
       </div>
