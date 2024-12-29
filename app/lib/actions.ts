@@ -80,3 +80,16 @@ export async function updateInvoice(id: string, formData: FormData) {
   // redirecionar pra página de faturas
   redirect("/dashboard/invoices")
 }
+
+/**
+ * Função que deleta uma fatura do DB.
+ * @author Next.js
+ */
+export async function deleteInvoice(id: string) {
+  // Executar query SQL
+  await sql`
+  DELETE FROM invoices WHERE id = ${id}`
+
+  // Recarregar cache
+  revalidatePath("/dashboard/invoices")
+}
