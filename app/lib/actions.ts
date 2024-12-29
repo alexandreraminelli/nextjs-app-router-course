@@ -29,4 +29,8 @@ export async function createInvoice(formData: FormData) {
     /** Status da fatura. */
     status: formData.get("status"),
   })
+
+  // Converter valor em centavos
+  /** Valor em centavos. */
+  const amountInCents = amount * 100
 }
