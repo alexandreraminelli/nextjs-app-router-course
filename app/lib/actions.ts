@@ -3,6 +3,7 @@
 /* importações */
 import { z } from "zod" // biblioteca de validação de TS
 import { sql } from "@vercel/postgres" // comunicação com banco de dados
+import { revalidatePath } from "next/cache" // função que limpa o cache
 
 /** Formato de dados das faturas para o Zod. */
 const FormSchema = z.object({
@@ -44,4 +45,7 @@ export async function createInvoice(formData: FormData) {
   INSERT INTO invoices (customer_id, amount, status, date)
   VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
   `
+
+  // Limpar o cache
+  revalidatePath("/dashboard/invoices")
 }
