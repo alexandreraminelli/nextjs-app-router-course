@@ -2,6 +2,7 @@
 
 /* importações */
 import { z } from "zod" // biblioteca de validação de TS
+import { sql } from "@vercel/postgres" // comunicação com banco de dados
 
 /** Formato de dados das faturas para o Zod. */
 const FormSchema = z.object({
@@ -37,4 +38,10 @@ export async function createInvoice(formData: FormData) {
   // Obter data atual
   /** Data de criação da fatura. */
   const date = new Date().toISOString().split("T")[0]
+
+  // Adicionar dados no banco de dados
+  await sql`
+  INSERT INTO invoices (customer_id, amount, status, date)
+  VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
+  `
 }
