@@ -52,3 +52,31 @@ export async function createInvoice(formData: FormData) {
   // Redirecionar usuário pra página de faturas
   redirect("/dashboard/invoices")
 }
+
+/** Formato de dados da fatura. */
+const UpdateInvoice = FormSchema.omit({ id: true, date: true })
+
+/**
+ * Função que atualiza a fatura no DB.
+ * @author Next.js
+ */
+export async function updateInvoice(id: string, formData: FormData) {
+  const { customerId, amount, status } = UpdateInvoice.parse({
+    customerId: formData.get("customerId"),
+    amount: formData.get("amount"),
+    status: formData.get("status"),
+  })
+
+  /** Valor monetário convertido para centavos. */
+  const amountInCents = amount * 100
+
+  // Atualizar fatura no SQL
+  await sql`
+  UPDATE invoices
+  SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
+  WHERE id = ${id}`
+
+  revalidatePath("/dashboard/invoices")
+  // redirecionar pra página de faturas
+  redirect("/dashboard/invoices")
+}
