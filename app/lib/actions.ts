@@ -33,4 +33,8 @@ export async function createInvoice(formData: FormData) {
   // Converter valor em centavos
   /** Valor em centavos. */
   const amountInCents = amount * 100
+
+  // Obter data atual
+  /** Data de criação da fatura. */
+  const date = new Date().toISOString().split("T")[0]
 }
