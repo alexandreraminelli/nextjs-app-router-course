@@ -18,6 +18,7 @@ export type Customer = {
   image_url: string
 }
 
+/** Tipo de dados para faturas. */
 export type Invoice = {
   id: string
   customer_id: string
