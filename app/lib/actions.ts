@@ -41,11 +41,18 @@ export async function createInvoice(formData: FormData) {
   /** Data de criação da fatura. */
   const date = new Date().toISOString().split("T")[0]
 
-  // Adicionar dados no banco de dados
-  await sql`
-  INSERT INTO invoices (customer_id, amount, status, date)
-  VALUES (${customerId}, ${amountInCents}, ${status}, ${date})
-  `
+  // Tratamento de erros:
+  try {
+    // Adicionar dados no banco de dados
+    await sql`
+      INSERT INTO invoices (customer_id, amount, status, date)
+      VALUES (${customerId}, ${amountInCents}, ${status}, ${date})`
+  } catch (e) {
+    /* se ocorrer um erro */
+    return {
+      message: "Database Error: Failed to Create Invoice.",
+    }
+  }
 
   // Limpar o cache
   revalidatePath("/dashboard/invoices")
@@ -70,11 +77,19 @@ export async function updateInvoice(id: string, formData: FormData) {
   /** Valor monetário convertido para centavos. */
   const amountInCents = amount * 100
 
-  // Atualizar fatura no SQL
-  await sql`
-  UPDATE invoices
-  SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
-  WHERE id = ${id}`
+  // Tratamento de erros
+  try {
+    // Atualizar fatura no SQL
+    await sql`
+      UPDATE invoices
+      SET customer_id = ${customerId}, amount = ${amountInCents}, status = ${status}
+      WHERE id = ${id}`
+  } catch (e) {
+    /* se ocorrer um erro */
+    return {
+      message: "Database Error: Failed to Update Invoice.",
+    }
+  }
 
   revalidatePath("/dashboard/invoices")
   // redirecionar pra página de faturas
@@ -86,10 +101,18 @@ export async function updateInvoice(id: string, formData: FormData) {
  * @author Next.js
  */
 export async function deleteInvoice(id: string) {
-  // Executar query SQL
-  await sql`
-  DELETE FROM invoices WHERE id = ${id}`
+throw new Error("Failed to Delete Invoice")
 
+  // Tratamento de erros
+  try {
+    // Executar query SQL
+    await sql`DELETE FROM invoices WHERE id = ${id}`
+  } catch (e) {
+    /* se ocorrer um erro */
+    return {
+      message: "Database Error: Failed to Delete Invoice.",
+    }
+  }
   // Recarregar cache
   revalidatePath("/dashboard/invoices")
 }
