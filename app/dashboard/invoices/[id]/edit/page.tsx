@@ -1,6 +1,7 @@
 import Breadcrumbs from "@/app/ui/invoices/breadcrumbs"
 import Form from "@/app/ui/invoices/edit-form"
 import { fetchCustomers, fetchInvoiceById } from "@/app/lib/data"
+import { notFound } from "next/navigation" // função que exibe o componente notFound
 
 /**
  * Página de editar faturas.
@@ -16,6 +17,11 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     fetchInvoiceById(id), // obter fatura
     fetchCustomers(), // obter consumidor
   ])
+
+  // notFound se fatura não existir
+  if (!invoice) {
+    notFound()
+  }
 
   // retorno do componente
   return (
