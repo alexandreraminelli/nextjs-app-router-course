@@ -31,6 +31,7 @@ const CreateInvoice = FormSchema.omit({ id: true, date: true })
 
 /** Tipo de dados State. */
 export type State = {
+  message?: string | null
   errors?: {
     customerId?: string[]
     amount?: string[]
