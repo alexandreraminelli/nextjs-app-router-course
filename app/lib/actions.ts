@@ -8,23 +8,44 @@ import { redirect } from "next/navigation"
 
 /** Formato de dados das faturas para o Zod. */
 const FormSchema = z.object({
+  /** ID da instância fatura. */
   id: z.string(),
-  customerId: z.string(),
-  amount: z.coerce.number(), // converter string para number
-  status: z.enum(["pending", "paid"]),
+  /** ID do cliente. */
+  customerId: z.string({
+    invalid_type_error: "Please select a customer.", // msg para tipo inválido
+  }),
+  /** Valor da fatura (em dólares). */
+  amount: z.coerce
+    .number() // converter string para number
+    .gt(0, { message: "Please enter an amount greater than $0." }), // msg se não informar um número (padrão 0)
+  /** Status da fatura (pago ou pendente). */
+  status: z.enum(
+    ["pending", "paid"], // dados aceitos
+    { invalid_type_error: "Please select an invoice status." } // msg se entrada não for um dado aceito
+  ),
   date: z.string(),
 })
 
-/** */
+/** Função que retorna todas as faturas do db. */
 const CreateInvoice = FormSchema.omit({ id: true, date: true })
+
+/** Tipo de dados State. */
+export type State = {
+  errors?: {
+    customerId?: string[]
+    amount?: string[]
+    status?: string[]
+  }
+}
 
 /**
  * Função que cria uma nova fatura.
+ * @param prevState Estado passado do hook `useActionState`.
  * @author Next.js
  */
-export async function createInvoice(formData: FormData) {
-  /** Dados do formulário de criar fatura. */
-  const { customerId, amount, status } = CreateInvoice.parse({
+export async function createInvoice(prevState: State, formData: FormData) {
+  /** Dados do formulário de criar fatura após a validação. */
+  const validatedFields = CreateInvoice.safeParse({
     /** ID do consumidor. */
     customerId: formData.get("customerId"),
     /** Valor da fatura. */
@@ -33,15 +54,24 @@ export async function createInvoice(formData: FormData) {
     status: formData.get("status"),
   })
 
+  // Se validação falhar, retorne erros antecipadamente. Caso contrário, continue.
+  if (!validatedFields.success) {
+    return {
+      errors: validatedFields.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to Create Invoice.",
+    }
+  }
+
+  /* Preparar dados para inserção no db */
+  const { customerId, amount, status } = validatedFields.data
   // Converter valor em centavos
   /** Valor em centavos. */
   const amountInCents = amount * 100
-
   // Obter data atual
   /** Data de criação da fatura. */
   const date = new Date().toISOString().split("T")[0]
 
-  // Tratamento de erros:
+  /* Inserir dados no db */
   try {
     // Adicionar dados no banco de dados
     await sql`
@@ -101,7 +131,7 @@ export async function updateInvoice(id: string, formData: FormData) {
  * @author Next.js
  */
 export async function deleteInvoice(id: string) {
-throw new Error("Failed to Delete Invoice")
+  throw new Error("Failed to Delete Invoice")
 
   // Tratamento de erros
   try {
