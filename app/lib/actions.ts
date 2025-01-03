@@ -1,10 +1,12 @@
 "use server" // marcar funções exportadas como Server Actions
 
 /* importações */
-import { z } from "zod" // biblioteca de validação de TS
+import { signIn } from "@/auth" // função de autenticação
 import { sql } from "@vercel/postgres" // comunicação com banco de dados
+import { AuthError } from "next-auth"
 import { revalidatePath } from "next/cache" // função que limpa o cache
 import { redirect } from "next/navigation"
+import { z } from "zod" // biblioteca de validação de TS
 
 /** Formato de dados das faturas para o Zod. */
 const FormSchema = z.object({
@@ -146,4 +148,25 @@ export async function deleteInvoice(id: string) {
   }
   // Recarregar cache
   revalidatePath("/dashboard/invoices")
+}
+
+/** Ação de autenticação pro formulário de login. */
+export async function authenticate(prevState: string | undefined, formData: FormData) {
+  try {
+    // Chamar função que autentica o usuário usando os dados do formulário
+    await signIn("credentials", formData)
+  } catch (error) {
+    /* se ocorrer um erro */
+    // Verificar se erro foi de autenticação do Auth
+    if (error instanceof AuthError) {
+      /* Se erro foi do Auth */
+      switch (error.type) {
+        case "CredentialsSignin": // erro de credenciais
+          return "Invalid credentials."
+        default: // erro genérico
+          return "Something went wrong."
+      }
+    }
+    throw error // lançar erro
+  }
 }
